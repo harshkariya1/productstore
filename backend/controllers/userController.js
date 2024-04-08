@@ -9,27 +9,67 @@ const generateToken = (user) => {
   return jwt.sign(payload, 'crud', { expiresIn: '24h' });
 };
 
+
 // Function to register a new user
 const registerUser = async (req, res) => {
+  const { firstName, lastName, email, password, gender, hobbies, userRole } = req.body;
+  let profilePic = null;
+
+  if (req.file) {
+    profilePic = req.file.filename;
+  }
+
   try {
+    // Validate request body
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
 
-    const { firstName, lastName, email, password, gender, hobbies, userRole, profile_pic } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-
-    const result = await sequelize.query(
-      'INSERT INTO users (firstName, lastName, email, password, gender, hobbies, userRole, profile_pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    // Check if user with the same email already exists
+    const existingUser = await sequelize.query(
+      "SELECT * FROM users WHERE email = :email",
       {
-        replacements: [firstName, lastName, email, hashedPassword, gender, hobbies, userRole, profile_pic],
-        type: QueryTypes.INSERT
+        replacements: { email },
+        type: Sequelize.QueryTypes.SELECT,
       }
     );
+
+    if (existingUser.length > 0) {
+      return res.status(400).json({ error: "User with this email already exists." });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const result = await sequelize.query(
+      'INSERT INTO users (firstName, lastName, email, password, gender, hobbies, userRole, profile_pic) VALUES (:firstName, :lastName, :email, :hashedPassword, :gender, :hobbies, :userRole, :profile_pic)',
+      {
+        replacements: {
+          firstName,
+          lastName,
+          email,
+          hashedPassword,
+          gender,
+          hobbies,
+          userRole,
+          profile_pic: profilePic || null,
+        },
+        type: Sequelize.QueryTypes.INSERT,
+      }
+    );
+
+    // Close the database connection
+    await sequelize.close();
+
     res.json({ message: `User created!` });
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 // Function to login
 const loginUser = async (req, res) => {

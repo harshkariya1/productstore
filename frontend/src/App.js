@@ -7,12 +7,14 @@ import AddProduct from '../src/components/AddProduct';
 import Search from './components/Search';
 import AddCategory from './components/AddCategory';
 import EditProduct from './components/EditProduct';
+import RegisterUser from './components/RegisterUser';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/allProducts" element={<AllProduct />} />
+      <Route path="/" element={<RegisterUser />} />
+      <Route path="/Login" element={<Login />} />
+      <Route path="" element={<AllProduct />} />
       <Route path="/addProduct" element={<AddProduct />} />
       <Route path="/search" element={<Search />} />
       <Route path="/addCategory" element={<AddCategory />} />

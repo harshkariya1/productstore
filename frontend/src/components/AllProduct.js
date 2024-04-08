@@ -106,70 +106,63 @@ const ProductTable = () => {
     }, []);
 
     return (
-        <div className="container">
-            <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary mt-5 mb-3">
-
-                <div class="container-fluid">
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <h2>Product list</h2>
-
-                    </div>
-                    
-                    <div class="d-flex align-items-center">
-                        <div class="dropdown">
-
-                            <button className="btn btn-primary btn-sm mx-5" type="button" onClick={handleSearch}>Search</button>
-                            <button className="btn btn-warning btn-sm mx-5" type="button" onClick={handleLogout}>Log Out</button>
-                            <a class="navbar-brand mt-2 mt-lg-0" href='' onClick={handleImageClick}>
-                                <img
-                                    src=""
-                                    height="15"
-                                    alt="user"
-                                />
-                            </a>
-                        </div>
-                    </div>
+        <div class="container-fluid bg-dark text-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark mt-5 mb-3">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <h2 class="text-light">Product list</h2>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-sm mx-5" type="button" onclick="handleSearch()">Search</button>
+                    <button class="btn btn-warning btn-sm mx-5" type="button" onclick="handleLogout()">Log Out</button>
+                    <a class="navbar-brand mt-2 mt-lg-0" href='' onclick="handleImageClick()">
+                        <img
+                            src=""
+                            height="15"
+                            alt="user"
+                        />
+                    </a>
                 </div>
-            </nav>
-            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Category ID</th>
-                        <th>Price</th>
-                        <th>Images</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {Array.isArray(products) && products.map((product, index) => (
-                        <tr key={index}>
-                            <td>{product.id}</td>
-                            <td>{product.name}</td>
-                            <td>{product.description}</td>
-                            <td>{product.categoryId}</td>
-                            <td>{product.price}</td>
-                            <td>
-                                {Array.isArray(product.images) && product.images.map((image, i) => (
-                                    <img key={i} src={image} alt={`Product ${i}`} style={{ maxWidth: '100px' }} />
-                                ))}
-                            </td>
-                            <td>{<button className="btn btn-primary btn-sm" onClick={() => navigate(`/editProduct/${product.id}`)}>Edit</button>}</td>
-                            <td>{<button className="btn btn-danger btn-sm" onClick={() => handleDelete(product.id)}>Delete</button>}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <button className="btn btn-primary btn-sm" type="button" onClick={handleClick}>Add Product</button>
-
-            <button className="btn btn-primary btn-sm mx-5" type="button" onClick={handlePreviousPage} disabled={page === 1}>Previous Page</button>
-            <span className="mx-2">Page {page}</span>
-
-            <button className="btn btn-primary btn-sm mx-5" type="button" onClick={handleNextPage} disabled={products.length < pageSize}>Next Page</button>
+            </div>
         </div>
+    </nav>
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Category ID</th>
+                <th>Price</th>
+                <th>Images</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {products.map((product, index) => (
+                <tr key={index}>
+                    <td>{product.name}</td>
+                    <td>{product.description}</td>
+                    <td>{product.categoryId}</td>
+                    <td>{product.price}</td>
+                    <td>
+                        {Array.isArray(product.images) && product.images.map((image, i) => (
+                            <img key={i} src={image} alt={`Product ${i}`} style={{ maxWidth: '100px' }} />
+                        ))}
+                    </td>
+                    <td>{<button class="btn btn-primary btn-sm" onclick="navigate(`/edit/${product._id}`)">Edit</button>}</td>
+                    <td>{<button class="btn btn-danger btn-sm" onclick="handleDelete()">Delete</button>}</td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
+    <button class="btn btn-primary btn-sm" type="button" onclick="handleClick()">Add Product</button>
+    <button class="btn btn-primary btn-sm mx-5" type="button" onclick="handlePreviousPage()" disabled={page === 1}>Previous Page</button>
+    <span class="mx-2">Page {page}</span>
+    <button class="btn btn-primary btn-sm mx-5" type="button" onclick="handleNextPage()" disabled={products.length < pageSize}>Next Page</button>
+</div>
+
     );
 };
 

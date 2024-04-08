@@ -51,40 +51,43 @@ const Login = () => {
     };
 
     return (
-        <Container className="d-flex justify-content-center align-items-center vh-100">
-            <div className="login-form p-4 border rounded">
-                <h3 className="text-center">Login</h3>
-                {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
-                <Form onSubmit={handleSubmit} className="mt-3">
-                    <Form.Group controlId="formUsername">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter your username"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </Form.Group>
+        <Container fluid className="d-flex justify-content-center align-items-center vh-100 bg-dark">
+    <div className="login-form p-5 rounded shadow bg-dark" style={{ width: '400px', border: 'none' }}>
+        <h3 className="text-center mb-4 text-light">Welcome Back!</h3>
+        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+        <Form onSubmit={handleSubmit} className="bg-transparent">
+            <Form.Group controlId="formUsername" className="mb-3">
+                <Form.Label className="text-light">Email</Form.Label>
+                <Form.Control
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="rounded-pill"
+                />
+            </Form.Group>
 
-                    <Form.Group controlId="formPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </Form.Group>
+            <Form.Group controlId="formPassword" className="mb-3">
+                <Form.Label className="text-light">Password</Form.Label>
+                <Form.Control
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="rounded-pill"
+                />
+            </Form.Group>
 
-                    <Button variant="primary" type="submit" className="w-100 mt-3">
-                        Login
-                    </Button>
-                    <Button variant="primary" className="w-100 mt-3" onClick={handleRegister}>
-                        SignUp
-                    </Button>
-                </Form>
-            </div>
-        </Container>
+            <Button variant="primary" type="submit" className="w-100 rounded-pill mb-3">
+                Login
+            </Button>
+
+            <Button variant="outline-primary" className="w-100 rounded-pill" onClick={handleRegister}>
+                Sign Up
+            </Button>
+        </Form>
+    </div>
+</Container>
     );
 };
 
