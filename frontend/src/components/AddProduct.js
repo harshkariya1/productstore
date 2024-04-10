@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Container, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './component.css';
 
@@ -66,55 +66,84 @@ const ProductForm = ({ onSubmit }) => {
     };
 
     return (
-        <Container>
-            <h1 className="text-center mt-5">Add Product</h1>
-            <Row className="justify-content-center mt-5">
-                <Col md={6}>
-                    {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>}
-                    <div>
-                        <div className="form-group mx-4 mt-3">
-                            <label htmlFor="name">Name</label>
-                            <input type="text" className="form-control" id="name" name="name" value={formData.name} onChange={handleChange} />
-                        </div>
-                        <div className="form-group mx-4 mt-3">
-                            <label htmlFor="description">Description</label>
-                            <input type="text" className="form-control" id="description" name="description" value={formData.description} onChange={handleChange} />
-                        </div>
-                        <div className="form-group mx-4 mt-3">
-                            <label htmlFor="categoryId">Category ID</label>
-                            <input type="text" className="form-control" id="categoryId" name="categoryId" value={formData.categoryId} onChange={handleChange} />
-                        </div>
-                        <div className="form-group mx-4 mt-3">
-                            <label htmlFor="price">Price</label>
-                            <input type="text" className="form-control" id="price" name="price" value={formData.price} onChange={handleChange} />
-                        </div>
-                        <div className="form-group mx-4 mt-3">
-                            <label htmlFor="images">Images</label>
-                            <div className="custom-file mx-3 mt-3">
-                                <input type="file" className="custom-file-input" id="images" name="images" onChange={handleFileChange} />
-                            </div>
-                        </div>
-                    </div>
-                </Col>
-            </Row>
-            <div className="addproduct-buttons mt-5">
-            <div>
-                    <button className="btn btn-primary" onClick={handleShowAllProducts}>
-                            Show All Products
-                        </button>
-                </div>
-                <div className='right-section'>
-                    <button className="btn btn-danger " onClick={handleCancel}>
-                            Cancel
-                        </button>
-                    <button className="btn btn-primary " onClick={handleSubmit}>
-                        Submit
-                    </button>
-                </div>
-            </div>
-           
-        </Container>
+        <Container fluid className="d-flex justify-content-center align-items-center vh-100 bg-dark">
+            <div className="login-form p-5 rounded shadow bg-dark" style={{ width: '400px', border: 'none' }}>
+                <h3 className="text-center mb-4 text-light">Add Product</h3>
+                {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+                <Form onSubmit={handleSubmit} className="bg-transparent">
+                    <Form.Group controlId="formName" className="mb-3">
+                        <Form.Label className="text-light">Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter product name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            className="rounded-pill"
+                            name="name"
+                        />
+                    </Form.Group>
 
+                    <Form.Group controlId="formDescription" className="mb-3">
+                        <Form.Label className="text-light">Description</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter product description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            className="rounded-pill"
+                            name="description"
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="formCategoryId" className="mb-3">
+                        <Form.Label className="text-light">Category ID</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter category ID"
+                            value={formData.categoryId}
+                            onChange={handleChange}
+                            className="rounded-pill"
+                            name="categoryId"
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="formPrice" className="mb-3">
+                        <Form.Label className="text-light">Price</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter product price"
+                            value={formData.price}
+                            onChange={handleChange}
+                            className="rounded-pill"
+                            name="price"
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="formImages" className="mb-3">
+                        <Form.Label className="text-light">Images</Form.Label>
+                        <div className="custom-file">
+                            <Form.Control
+                                type="file"
+                                className="custom-file-input"
+                                onChange={handleFileChange}
+                                name="images"
+                            />
+                            <label className="custom-file-label text-light" htmlFor="formImages">
+                                Choose file
+                            </label>
+                        </div>
+                    </Form.Group>
+
+                    <Button variant="primary" type="submit" className="w-100 rounded-pill mb-3">
+                        Submit
+                    </Button>
+
+                    <Button variant="outline-primary" className="w-100 rounded-pill" onClick={handleShowAllProducts}>
+                        Show All Products
+                    </Button>
+                </Form>
+            </div>
+        </Container>
     );
 };
 

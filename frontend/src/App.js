@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from '../src/components/Login';
 import AllProduct from '../src/components/AllProduct';
@@ -8,18 +8,30 @@ import Search from './components/Search';
 import AddCategory from './components/AddCategory';
 import EditProduct from './components/EditProduct';
 import RegisterUser from './components/RegisterUser';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Toaster } from "sonner";
+import Header from './components/Header';
+import { UserContextProvider } from "./Context/UserContext";
+import Profile from './components/Profile';
 
 function App() {
   return (
+    <UserContextProvider>
+      
+      <Toaster richColors position="top-right" />
+        <Header />
     <Routes>
       <Route path="/" element={<RegisterUser />} />
       <Route path="/Login" element={<Login />} />
-      <Route path="" element={<AllProduct />} />
+      <Route path="/AllProducts" element={<AllProduct />} />
       <Route path="/addProduct" element={<AddProduct />} />
       <Route path="/search" element={<Search />} />
       <Route path="/addCategory" element={<AddCategory />} />
       <Route path="/editProduct/:id" element={<EditProduct />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
+   
+    </UserContextProvider>
   );
 }
 

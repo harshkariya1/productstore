@@ -3,6 +3,7 @@ const { sequelize } = require('../config/database');
 const { QueryTypes } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const verifyToken = require('../config/auth')
+const emailvalidator = require("email-validator");
 
 const generateToken = (user) => {
   const payload = { email: user.email, password: user.password };
@@ -12,65 +13,79 @@ const generateToken = (user) => {
 
 // Function to register a new user
 const registerUser = async (req, res) => {
-  const { firstName, lastName, email, password, gender, hobbies, userRole } = req.body;
+  const { firstName, lastName, email, password, gender, hobbies, } = req.body;
+  console.log('Received request body:', req.body); 
+  // Check if the file is uploaded
   let profilePic = null;
-
   if (req.file) {
     profilePic = req.file.filename;
+    console.log('Profile picture:', profilePic);
+  }
+
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !password ||
+    !gender ||
+    !hobbies ||
+    !profilePic
+  ) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
-    // Validate request body
-    const validationErrors = validationResult(req);
-    if (!validationErrors.isEmpty()) {
-      return res.status(400).json({ errors: validationErrors.array() });
+    if (!emailvalidator.validate(email)) {
+      return res.status(400).json({ message: "Invalid Email" });
     }
 
-    // Check if user with the same email already exists
-    const existingUser = await sequelize.query(
-      "SELECT * FROM users WHERE email = :email",
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be atleast 6 characters" });
+    }
+
+    // Checking if the user already exists
+    const getAuther = await sequelize.query(
+      `SELECT * FROM users WHERE email = '${email}'`,
+      { type: QueryTypes.SELECT }
+    );
+
+    if (getAuther.length) {
+      return res.status(400).json({ message: "email already exists" });
+    }
+
+    // Hashing the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const roleName = "user";
+    // Inserting data into the users database
+
+    await sequelize.query(
+      `INSERT INTO users (firstName, lastName, email, password, gender, hobbies, roleName, profilePic) VALUES ('${firstName}', '${lastName}', '${email}', '${hashedPassword}', '${gender}', '${hobbies}', '${roleName}', '${profilePic}')`,
+      { type: QueryTypes.INSERT }
+    );
+
+    const getUser = await sequelize.query(
+      `SELECT id FROM users WHERE email = '${email}'`,
       {
-        replacements: { email },
-        type: Sequelize.QueryTypes.SELECT,
+        type: QueryTypes.SELECT,
       }
     );
 
-    if (existingUser.length > 0) {
-      return res.status(400).json({ error: "User with this email already exists." });
-    }
+    const userId = getUser[0].userId;
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user
-    const result = await sequelize.query(
-      'INSERT INTO users (firstName, lastName, email, password, gender, hobbies, userRole, profile_pic) VALUES (:firstName, :lastName, :email, :hashedPassword, :gender, :hobbies, :userRole, :profile_pic)',
-      {
-        replacements: {
-          firstName,
-          lastName,
-          email,
-          hashedPassword,
-          gender,
-          hobbies,
-          userRole,
-          profile_pic: profilePic || null,
-        },
-        type: Sequelize.QueryTypes.INSERT,
-      }
+    await sequelize.query(
+      `INSERT INTO roles (roleName, userId) VALUES ('${roleName}', '${userId}')`,
+      { type: QueryTypes.INSERT }
     );
 
-    // Close the database connection
-    await sequelize.close();
-
-    res.json({ message: `User created!` });
+    return res.status(200).json({ message: "success" });
   } catch (error) {
-    console.error('Error registering user:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ message: error.message });
   }
 };
-
-
 // Function to login
 const loginUser = async (req, res) => {
   try {

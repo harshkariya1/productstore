@@ -19,7 +19,7 @@ const Login = () => {
     })
 
     const handleRegister = () => {
-        navigate('/addUser');
+        navigate('/');
     };
 
     const handleSubmit = async (e) => {
@@ -38,7 +38,7 @@ const Login = () => {
 
                 const token = response.data.token;
                 localStorage.setItem('accessToken', token);
-                navigate('/allProducts');
+                navigate('/AllProducts');
 
             } else {
                 setErrorMessage('Login failed. Please try again.');
@@ -78,7 +78,7 @@ const Login = () => {
                 />
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="w-100 rounded-pill mb-3">
+            <Button variant="primary" type="submit" className="w-100 rounded-pill mb-3" >
                 Login
             </Button>
 

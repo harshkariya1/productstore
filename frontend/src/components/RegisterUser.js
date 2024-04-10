@@ -50,7 +50,7 @@ const RegisterUser = () => {
     try {
         // Make API call
         const response = await axios.post(
-          "http://localhost:5000/users/register",
+          "http://localhost:5000/api/register/user",
           formData,
           {
             withCredentials: true,
@@ -102,10 +102,10 @@ const RegisterUser = () => {
       setProfilePic(file);
     }
   };
-
+  // style={{ width: '400px', border: 'none' }}
   return (
-    <div className="container">
-  <div className="row justify-content-center align-items-center vh-100">
+    <div className="container vh-100">
+  <div className="row justify-content-center align-items-center vh-100 w-1000" >
     <div className="col-md-6">
       <div className="sign-in__wrapper">
         <div className="sign-in__backdrop"></div>
@@ -114,7 +114,7 @@ const RegisterUser = () => {
           className="shadow p-4 bg-dark rounded"
           onSubmit={handleFormSubmit}
         >
-          <div className="h4 mb-2 text-center text-light">Sign In</div>
+          <div className="h4 mb-0 text-center text-light">Sign In</div>
           <Form.Group className="mb-2" controlId="firstName">
             <Form.Label className="text-light">First Name</Form.Label>
             <Form.Control

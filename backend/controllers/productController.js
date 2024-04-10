@@ -47,7 +47,7 @@ const getProductById = async (req, res) => {
     const productId = req.params.id;
     console.log(productId);
     const product = await sequelize.query(
-      'SELECT * FROM product WHERE id = ?',
+      'SELECT * FROM product WHERE productId = ?',
       { replacements: [productId], type: QueryTypes.SELECT }
     );
     if (product.length === 0) {
@@ -67,7 +67,7 @@ const updateProduct = async (req, res) => {
     const { name, description, categoryId, price, images } = req.body;
 
     await sequelize.query(
-      'UPDATE product SET name = ?, description = ?, categoryId = ?, price = ?, images = ? WHERE id = ?',
+      'UPDATE product SET name = ?, description = ?, categoryId = ?, price = ?, images = ? WHERE productId = ?',
       { replacements: [name, description, categoryId, price, images, productId], type: QueryTypes.UPDATE }
     );
     res.json({ message: 'Product updated successfully' });
@@ -81,9 +81,9 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const productId = req.params.id;
-
+    console.log(productId );
     await sequelize.query(
-      'DELETE FROM product WHERE id = ?',
+      'DELETE FROM product WHERE productId = ?',
       { replacements: [productId], type: QueryTypes.DELETE }
     );
     res.json({ message: 'Product deleted successfully' });

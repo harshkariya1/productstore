@@ -25,7 +25,8 @@ const UpdateBook = () => {
         const response = await fetch(`http://localhost:5000/api/productById/${id}`, {
           headers: {
             'Authorization': token
-          }
+          },
+          
         });
         
         if (response.status === 200) {
@@ -52,27 +53,28 @@ const UpdateBook = () => {
   };
 
   const handleShowAllBook = () => {
-    navigate('/allBooks');
+    navigate('/AllProducts');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!product.name || !product.description || !product.categoryId || !product.price || !product.image ) {
+    if(!product.id || !product.name || !product.description || !product.categoryId || !product.price || !product.image ) {
       setErrorMessage('All fields are required!');
       return;
     }
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/updateProduct/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': localStorage.getItem('accessToken'),
           'Content-Type': 'application/json',
+          
         },
         body: JSON.stringify(product),
       });
       if (response.ok) {
         console.log('Product updated successfully');
-        navigate('/allProducts');
+        navigate('/AllProducts');
       } else {
         console.error('Failed to update product:', response.statusText);
       }
@@ -82,47 +84,79 @@ const UpdateBook = () => {
   };
 
   return (
-    <div>
+    <div className="bg-dark text-light py-5">
       <div className="container mt-5">
-        <h2>Update Product</h2>
+        <h2 className="mb-4">Update Product</h2>
         {errorMessage && <p className="text-danger">{errorMessage}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="id" className="form-label">
-              ID  
-            </label>
+            <label htmlFor="id" className="form-label">product ID</label>
             <input
               type="text"
-              className="form-control"
+              className="form-control bg-dark text-light"
               id="id"
               name="id"
-              value={product.id || ''} // || operator to handle undefined values
-              readOnly
+              value={product.id }
+              onChange={handleChange}
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="name" className="form-label">name</label>
-            <input type="text" className="form-control" id="name" name="name" value={product.name} onChange={handleChange} />
+            <label htmlFor="name" className="form-label">Name</label>
+            <input
+              type="text"
+              className="form-control bg-dark text-light"
+              id="name"
+              name="name"
+              value={product.name}
+              onChange={handleChange}
+            />
           </div>
           <div className="mb-3">
             <label htmlFor="description" className="form-label">Description</label>
-            <input type="text" className="form-control" id="description" name="description" value={product.description} onChange={handleChange} />
+            <input
+              type="text"
+              className="form-control bg-dark text-light"
+              id="description"
+              name="description"
+              value={product.description}
+              onChange={handleChange}
+            />
           </div>
           <div className="mb-3">
-            <label htmlFor="categoryId" className="form-label">Published Year</label>
-            <input type="text" className="form-control" id="categoryId" name="categoryId" value={product.categoryId} onChange={handleChange} />
+            <label htmlFor="categoryId" className="form-label">Category ID</label>
+            <input
+              type="text"
+              className="form-control bg-dark text-light"
+              id="categoryId"
+              name="categoryId"
+              value={product.categoryId}
+              onChange={handleChange}
+            />
           </div>
           <div className="mb-3">
-            <label htmlFor="price" className="form-label">Quantity Available</label>
-            <input type="text" className="form-control" id="price" name="price" value={product.price} onChange={handleChange} />
+            <label htmlFor="price" className="form-label">product price</label>
+            <input
+              type="text"
+              className="form-control bg-dark text-light"
+              id="price"
+              name="price"
+              value={product.price}
+              onChange={handleChange}
+            />
           </div>
-        
           <div className="mb-3">
             <label htmlFor="image" className="form-label">Image</label>
-            <input type="file" className="form-control" id="image" name="image" value={product.image} onChange={handleChange} />
+            <input
+              type="file"
+              className="form-control bg-dark text-light"
+              id="image"
+              name="image"
+              value={product.image}
+              onChange={handleChange}
+            />
           </div>
-          <button type="submit" className="btn btn-primary">Update Book</button>
-          <button type="submit" className="btn btn-primary mx-5"onClick={handleShowAllBook}>Show All Books</button>
+          <button type="submit" className="btn btn-primary mr-3" >Update Product</button>
+          <button type="button" className="btn btn-primary m-4" onClick={handleShowAllBook}>Show All Books</button>
         </form>
       </div>
     </div>
