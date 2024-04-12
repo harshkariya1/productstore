@@ -6,8 +6,8 @@ const verifyToken = require('../config/auth')
 const emailvalidator = require("email-validator");
 
 const generateToken = (user) => {
-  const payload = { email: user.email, password: user.password };
-  return jwt.sign(payload, 'crud', { expiresIn: '24h' });
+  const payload = { email: user.email, password: user.password, user : user.id, image: user.profilePic };
+  return jwt.sign(payload,  process.env.JWT_SECRET, { expiresIn: '24h' });
 };
 
 

@@ -3,6 +3,8 @@ const router = express.Router();
 const productController = require('../controllers/productController');
 const { createProduct, getAllProducts, getProductById, updateProduct, deleteProduct, searchProducts} = productController;
 const verifyToken = require('../config/auth');
+const authMiddleware = require('../middlewares/authMiddleware');
+const fileHandleMiddleware = require('../middlewares/fileHandleMiddleware');
 
 // Create a new product
 router.post('/createProducts', createProduct);
@@ -14,7 +16,7 @@ router.get('/products', getAllProducts);
 router.get('/productById/:id', getProductById);
 
 // Update a product 
-router.put('/updateProduct/:id', updateProduct);
+router.put('/updateProduct/:productId', authMiddleware, fileHandleMiddleware.array("images", 5), updateProduct);
 
 
 // Delete a product

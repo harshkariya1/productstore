@@ -1,10 +1,12 @@
 const jwt = require("jsonwebtoken");
-const { QueryTypes } = require("sequelize");
-const sequelize = require("../utils/sequelize");
+const { QueryTypes } = require('sequelize');
+const { sequelize } = require('../config/database');;
 
 const authMiddleware = async (req, res, next) => {
   try {
     const token = req.header("Authorization").split(" ")[1];
+
+    console.log("token", token);
 
     if (!token) {
       return res.status(401).json({ error: "Unauthorized: Missing token" });

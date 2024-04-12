@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 
 
 const RegisterUser = () => {
-  
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -17,13 +17,15 @@ const RegisterUser = () => {
   const [hobbies, setHobbies] = useState("");
   const [userRole, setUserRole] = useState("user");
   const [profilePic, setProfilePic] = useState(null);
-
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log("Error message:", errorMessage);
 
+    // Validating email format
     const emailRegExp =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/;
 
@@ -48,47 +50,51 @@ const RegisterUser = () => {
     formData.append("profilePic", profilePic);
 
     try {
-        // Make API call
-        const response = await axios.post(
-          "http://localhost:5000/api/register/user",
-          formData,
-          {
-            withCredentials: true,
-          }
-        );
-    
-        if (response.data.message === "success") {
-          // Clear form fields
-          setFirstName("");
-          setLastName("");
-          setEmail("");
-          setPassword("");
-          setCnfPassword("");
-          setGender("");
-          setHobbies("");
-          setUserRole("user");
-          setProfilePic("");
-    
-          // Show success toast
-          toast.success("Register Successful");
-    
-          // Navigate to login page
-          navigate("/login");
-        } else {
-          // Show error toast
-          toast.error("There is an error");
-          console.error(response.data.message);
+      // Make API call
+      const response = await axios.post(
+        "http://localhost:5000/api/register/user",
+        formData,
+        {
+          withCredentials: true,
         }
-      } catch (error) {
-        if (error.response && error.response.status === 400) {
-          toast.error(error.response.data.message);
-        } else {
-          toast.error("Something went wrong, try again");
-        }
-      } finally {
-        setLoading(false);
+      );
+
+      if (response.data.message === "success") {
+        // Clear form fields
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPassword("");
+        setCnfPassword("");
+        setGender("");
+        setHobbies("");
+        setUserRole("user");
+        setProfilePic("");
+
+        // Show success toast
+        toast.success("Register Successful");
+
+        // Navigate to login page
+        // navigate("/login");
+      } else if (response.data.message === "email_exists") {
+        // Handle case where email already exists
+        setErrorMessage("Email already exists. Please use a different email.");
+      } else {
+        // Show error toast
+        toast.error("There is an error");
+        console.error(response.data.message);
       }
-    };
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong, try again");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const MAX_FILE_SIZE_MB = 1;
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
@@ -96,7 +102,7 @@ const RegisterUser = () => {
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
       toast.error(`File size should be less than ${MAX_FILE_SIZE_MB}MB`);
       return;
-    } else if (!file.type == "image") {
+    } else if (!file.type.includes("image")) {
       toast.error(`File should be of Image type only`);
     } else {
       setProfilePic(file);
@@ -250,6 +256,7 @@ const RegisterUser = () => {
       </div>
     </div>
   </div>
+  <ToastContainer/>
 </div>
 
  

@@ -5,26 +5,33 @@ import { useParams, useNavigate } from 'react-router-dom';
 const UpdateBook = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState({
+    name: '',
+    description: '',
+    categoryId: '',
+    price: '',
+    images: null
+  });
   const [errorMessage, setErrorMessage] = useState('');
+  const token = localStorage.getItem('accessToken');
+  let response; 
 
-  console.log(id)
 
 
   useEffect(() => {
     const fetchProductData = async () => {
 
       try {
-        const token = localStorage.getItem('accessToken');
 
         if (!token) {
           console.log('No token found. User is not authenticated.');
           navigate('/');
           return;
         }
+        console.log("Edit Product")
         const response = await fetch(`http://localhost:5000/api/productById/${id}`, {
           headers: {
-            'Authorization': token
+            'Authorization': `Bearer ${token}`
           },
           
         });
@@ -58,19 +65,20 @@ const UpdateBook = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!product.id || !product.name || !product.description || !product.categoryId || !product.price || !product.image ) {
+    if( !product.productId||!product.name || !product.description || !product.categoryId || !product.price || !product.images ) {
       setErrorMessage('All fields are required!');
+      console.log("frontend");
       return;
     }
     try {
-      const response = await fetch(`http://localhost:5000/api/updateProduct/${id}`, {
+       response = await fetch(`http://localhost:5000/api/updateProduct/${id}`, {
         method: 'PUT',
         headers: {
-          'Authorization': localStorage.getItem('accessToken'),
+          'Authorization': ` bearer ${token}`,
           'Content-Type': 'application/json',
           
         },
-        body: JSON.stringify(product),
+        body: JSON.stringify(response),
       });
       if (response.ok) {
         console.log('Product updated successfully');
@@ -96,8 +104,9 @@ const UpdateBook = () => {
               className="form-control bg-dark text-light"
               id="id"
               name="id"
-              value={product.id }
+              value={product.productId }
               onChange={handleChange}
+              
             />
           </div>
           <div className="mb-3">
@@ -145,13 +154,13 @@ const UpdateBook = () => {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="image" className="form-label">Image</label>
+            <label htmlFor="images" className="form-label">images</label>
             <input
               type="file"
               className="form-control bg-dark text-light"
-              id="image"
-              name="image"
-              value={product.image}
+              id="images"
+              name="images"
+              value={product.images}
               onChange={handleChange}
             />
           </div>

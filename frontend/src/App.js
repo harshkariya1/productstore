@@ -9,17 +9,15 @@ import AddCategory from './components/AddCategory';
 import EditProduct from './components/EditProduct';
 import RegisterUser from './components/RegisterUser';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Toaster } from "sonner";
-import Header from './components/Header';
 import { UserContextProvider } from "./Context/UserContext";
 import Profile from './components/Profile';
+
 
 function App() {
   return (
     <UserContextProvider>
       
-      <Toaster richColors position="top-right" />
-        <Header />
+   
     <Routes>
       <Route path="/" element={<RegisterUser />} />
       <Route path="/Login" element={<Login />} />
